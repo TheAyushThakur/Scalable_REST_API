@@ -381,44 +381,6 @@ curl -X GET http://127.0.0.1:8000/api/v1/tasks/ \
 
 ---
 
-## 🐛 Troubleshooting
-
-### Issue: "Connection to server at localhost:5432 failed"
-**Solution**: 
-- Ensure PostgreSQL is running
-- OR use SQLite for development (edit `settings.py`)
-- Check `.env` database credentials
-
-### Issue: "No password supplied"
-**Solution**:
-- Add `POSTGRES_PASSWORD` to `.env`
-- Restart Django server
-
-### Issue: Cannot see all tasks as admin
-**Solution**:
-- Ensure admin user was created with `python manage.py createsuperuser`
-- Verify JWT token includes `"role": "admin"`
-- Check browser console for errors
-- Clear localStorage and re-login
-
-### Issue: Frontend shows 403 error on `/users` endpoint
-**Solution**:
-- Verify you're logged in as admin
-- Check that the token includes `"role": "admin"`
-- Restart backend server
-
-### Issue: CORS errors
-**Solution**:
-- Ensure `CORS_ALLOW_ALL_ORIGINS = True` in `backend/settings.py` (development)
-- For production, set `CORS_ALLOWED_ORIGINS` with specific domains
-
-### Issue: "Module does not provide an export named 'default'"
-**Solution**:
-- Use named import: `import { jwtDecode } from "jwt-decode"`
-- Restart dev server: `npm run dev`
-
----
-
 ## 📝 Database Models
 
 ### User Model
