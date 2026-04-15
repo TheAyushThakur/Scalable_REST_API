@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { BASE_URL, getToken } from "../api/api"
+import { authFetch, logout } from "../api/api"
 
 export default function CreateTask() {
 
@@ -9,19 +9,21 @@ export default function CreateTask() {
     const createTask = async (e) => {
         e.preventDefault()
 
-        const res = await fetch(`${BASE_URL}/tasks/`, {
+        const res = await authFetch("/tasks/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + getToken()
             },
             body: JSON.stringify({ title, description })
         })
 
         if (res.ok) {
             window.location.href = "/"
+        } else if (res.status === 401) {
+            logout()
         } else {
-            alert("Failed to create task")
+            const data = await res.json().catch(() => ({}))
+            alert(data?.errors ? JSON.stringify(data.errors) : "Failed to create task")
         }
     }
 

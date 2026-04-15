@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { BASE_URL, setToken } from "../api/api"
+import { BASE_URL, setTokens } from "../api/api"
 
 export default function Login() {
     const [username, setUsername] = useState("")
@@ -17,7 +17,7 @@ export default function Login() {
         const data = await res.json()
 
         if (data.access) {
-            setToken(data.access)
+            setTokens(data.access, data.refresh)
             window.location.href = "/"
         } else {
             alert("Invalid login credentials")

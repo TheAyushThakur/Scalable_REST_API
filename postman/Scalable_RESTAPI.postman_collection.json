@@ -1,0 +1,173 @@
+{
+  "info": {
+    "name": "Scalable REST API",
+    "_postman_id": "4dd3e0cf-f6c0-4b20-a0e2-2d8d8e6f488d",
+    "description": "Postman collection for auth + RBAC + task CRUD endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth - Register",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"demo_user\",\n  \"email\": \"demo@example.com\",\n  \"password\": \"StrongPass123!\"\n}"
+        },
+        "url": "{{baseUrl}}/auth/register/"
+      }
+    },
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"demo_user\",\n  \"password\": \"StrongPass123!\"\n}"
+        },
+        "url": "{{baseUrl}}/auth/login/"
+      }
+    },
+    {
+      "name": "Auth - Refresh",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"refresh\": \"{{refreshToken}}\"\n}"
+        },
+        "url": "{{baseUrl}}/auth/token/refresh/"
+      }
+    },
+    {
+      "name": "Auth - List Users (Admin)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/auth/users/"
+      }
+    },
+    {
+      "name": "Tasks - List",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/tasks/"
+      }
+    },
+    {
+      "name": "Tasks - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Finish assignment\",\n  \"description\": \"Finalize backend and frontend\"\n}"
+        },
+        "url": "{{baseUrl}}/tasks/"
+      }
+    },
+    {
+      "name": "Tasks - Retrieve",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/tasks/{{taskId}}/"
+      }
+    },
+    {
+      "name": "Tasks - Update",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Finish assignment\",\n  \"description\": \"Updated task\",\n  \"is_completed\": true\n}"
+        },
+        "url": "{{baseUrl}}/tasks/{{taskId}}/"
+      }
+    },
+    {
+      "name": "Tasks - Delete",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/tasks/{{taskId}}/"
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000/api/v1"
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "refreshToken",
+      "value": ""
+    },
+    {
+      "key": "taskId",
+      "value": "1"
+    }
+  ]
+}

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
-import { BASE_URL, getToken } from "../api/api"
+import { authFetch, getToken, logout } from "../api/api"
 import { jwtDecode } from "jwt-decode";
 
 
 export default function Users() {
 
     const [users, setUsers] = useState([])
+    const [error, setError] = useState("")
 
     useEffect(() => {
         const token = getToken()
@@ -17,16 +18,31 @@ export default function Users() {
             return
         }
 
-        fetch(`${BASE_URL}/auth/users/`, {
-            headers: { "Authorization": "Bearer " + token }
-        })
-        .then(res => res.json())
-        .then(data => setUsers(data))
+        authFetch("/auth/users/")
+            .then(async (res) => {
+                if (res.status === 401) {
+                    logout()
+                    return
+                }
+                const data = await res.json().catch(() => ([]))
+                if (!res.ok) {
+                    setError("Failed to fetch users.")
+                    setUsers([])
+                    return
+                }
+                setError("")
+                setUsers(Array.isArray(data) ? data : [])
+            })
+            .catch(() => {
+                setError("Network error while fetching users.")
+                setUsers([])
+            })
     }, [])
 
     return (
         <div style={{ maxWidth: 600, margin: "50px auto" }}>
             <h2>All Users</h2>
+            {error && <p style={{ color: "red" }}>{error}</p>}
 
             {users.map(user => (
                 <div 

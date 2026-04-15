@@ -1,401 +1,172 @@
-# Scalable REST API
+# Scalable REST API (Assignment Complete)
 
-A full-stack scalable REST API application built with **Django** (backend) and **React** (frontend), featuring JWT authentication, role-based access control (RBAC), and task management functionality.
+Full-stack assignment project built with Django REST Framework + React.
 
----
-
-## 📋 Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Prerequisites](#prerequisites)
-- [Installation & Setup](#installation--setup)
-- [Running the Application](#running-the-application)
-- [API Endpoints](#api-endpoints)
-- [Authentication](#authentication)
-- [Role-Based Access Control](#role-based-access-control)
-- [Usage Examples](#usage-examples)
-- [Troubleshooting](#troubleshooting)
-
----
-
-## 🎯 Overview
-
-This project demonstrates a production-ready REST API with:
-- **User Authentication** using JWT tokens (SimpleJWT)
-- **Role-Based Access Control** (Admin & User roles)
-- **Task Management System** with CRUD operations
-- **API Documentation** with Swagger/OpenAPI
-- **PostgreSQL Database** for data persistence
-- **CORS Support** for cross-origin requests
-- **Production-Ready Deployment** with Gunicorn
-
----
-
-## ✨ Features
-
-### Backend Features
-- ✅ JWT authentication with refresh tokens
-- ✅ Custom User model with role-based permissions
-- ✅ Task CRUD operations with owner-based filtering
-- ✅ Admin dashboard to view all users and tasks
-- ✅ API documentation (Swagger UI)
-- ✅ Environment-based configuration
-- ✅ PostgreSQL database integration
-- ✅ CORS headers support
-
-### Frontend Features
-- ✅ User registration and login
-- ✅ Dashboard displaying tasks (filtered by role)
-- ✅ Create, edit, and delete tasks
-- ✅ View all users (admin only)
-- ✅ Role-based UI elements (navbar links)
-- ✅ Responsive design with inline styling
-- ✅ JWT token management in localStorage
-- ✅ Error handling and user feedback
-
----
-
-## 🛠 Tech Stack
+## What is implemented
 
 ### Backend
-- **Python 3.11+**
-- **Django 5.2** - Web framework
-- **Django REST Framework** - REST API framework
-- **SimpleJWT** - JWT authentication
-- **PostgreSQL** - Database
-- **Gunicorn** - Production WSGI server
-- **django-cors-headers** - CORS support
-- **drf-yasg** - Swagger/OpenAPI documentation
+- JWT authentication (`register`, `login`, `refresh`)
+- Password hashing via Django auth
+- Role-based access control (`user`, `admin`)
+- CRUD for secondary entity (`Task`)
+- API versioning using URL path (`/api/v1/...`)
+- Input validation + standardized API error format
+- Swagger/OpenAPI docs
+- PostgreSQL support (with optional SQLite fallback)
 
 ### Frontend
-- **React 18** - UI library
-- **Vite** - Build tool and dev server
-- **jwt-decode** - JWT token decoding
-- **npm** - Package manager
+- Register and login pages
+- Protected dashboard (requires JWT)
+- CRUD flows for tasks
+- Admin-only users page
+- API error/success messaging support
 
----
+### Assignment deliverables included
+- Backend + frontend code with setup docs
+- Working auth + CRUD APIs
+- UI connected to APIs
+- API documentation:
+  - Swagger UI: `http://127.0.0.1:8000/docs/`
+  - Postman collection: `postman/Scalable_RESTAPI.postman_collection.json`
+- Scalability note (see section below)
 
-## 📁 Project Structure
+## Tech stack
 
-```
+- Backend: Python, Django, Django REST Framework, SimpleJWT, drf-yasg, PostgreSQL
+- Frontend: React, Vite, React Router, jwt-decode
+
+## Project structure
+
+```text
 Scalable_RESTAPI/
-├── backend/                          # Django backend
-│   ├── backend/                      # Main Django project settings
-│   │   ├── settings.py               # Django configuration
-│   │   ├── urls.py                   # Main URL routing
-│   │   └── wsgi.py                   # WSGI configuration
-│   ├── users/                        # User authentication app
-│   │   ├── models.py                 # Custom User model
-│   │   ├── views.py                  # Auth views (login, register)
-│   │   ├── serializers.py            # User serializers with JWT claims
-│   │   ├── urls.py                   # Auth endpoints
-│   │   └── permissions.py            # Custom permission classes
-│   ├── tasks/                        # Task management app
-│   │   ├── models.py                 # Task model
-│   │   ├── views.py                  # Task CRUD views
-│   │   ├── serializers.py            # Task serializer
-│   │   ├── urls.py                   # Task endpoints
-│   │   └── permissions.py            # Task ownership checks
-│   ├── core/                         # Core app
-│   ├── .env                          # Environment variables
-│   ├── manage.py                     # Django CLI
-│   └── requirements.txt              # Python dependencies
-│
-├── frontend/                         # React frontend
-│   ├── src/
-│   │   ├── pages/                    # Page components
-│   │   │   ├── Login.jsx             # Login page
-│   │   │   ├── Register.jsx          # Registration page
-│   │   │   ├── Dashboard.jsx         # Task dashboard
-│   │   │   ├── CreateTask.jsx        # Create task page
-│   │   │   ├── EditTask.jsx          # Edit task page
-│   │   │   └── Users.jsx             # All users page (admin)
-│   │   ├── components/               # Reusable components
-│   │   │   ├── Navbar.jsx            # Navigation bar
-│   │   │   └── Loader.jsx            # Loading spinner
-│   │   ├── api/                      # API utilities
-│   │   │   └── api.js                # API calls and token management
-│   │   └── App.jsx                   # Main app with routing
-│   ├── package.json                  # Node dependencies
-│   └── vite.config.js                # Vite configuration
-│
-└── README.md                         # This file
+├── backend/
+│   ├── backend/                   # Django settings + root URLs
+│   ├── core/                      # Health endpoint + exception handler
+│   ├── users/                     # Auth + RBAC user APIs
+│   ├── tasks/                     # Task CRUD APIs
+│   ├── requirements.txt
+│   └── .env.example
+├── frontend/
+│   └── src/
+└── postman/
+    └── Scalable_RESTAPI.postman_collection.json
 ```
 
----
+## Setup
 
-## 📦 Prerequisites
-
-- **Python 3.11 or higher**
-- **Node.js 18+ and npm**
-- **PostgreSQL 12+** (or SQLite for development)
-- **Git**
-
----
-
-## 🚀 Installation & Setup
-
-### 1. Clone the Repository
+### 1) Clone
 
 ```bash
-git clone https://github.com/TheAyushThakur/Scalable_REST_API.git
-cd SCALABLE_RESTAPI
+git clone <your-repo-url>
+cd Scalable_RESTAPI
 ```
 
-### 2. Backend Setup
+### 2) Backend
 
-#### Create and activate virtual environment
-
-```powershell
+```bash
 cd backend
-python -m venv env
-.\env\Scripts\Activate.ps1
-```
-
-#### Install Python dependencies
-
-```powershell
+python -m venv .venv
+# Windows:
+.venv\Scripts\activate
+# Mac/Linux:
+# source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-#### Configure environment variables
-
-Create a `.env` file in the `backend/` directory:
+Create `.env` in `backend/` from `.env.example` and fill values.
 
 ```env
-# Database (PostgreSQL)
+SECRET_KEY=replace-with-a-strong-secret-key
+DEBUG=True
+ALLOWED_HOSTS=127.0.0.1,localhost
+TIME_ZONE=UTC
+CORS_ALLOWED_ORIGINS=http://localhost:5173
+
 POSTGRES_DB=scalable_api_db
-POSTGRES_USER=your_postgres_user
-POSTGRES_PASSWORD=your_postgres_password
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
 POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
 
-# Django
-SECRET_KEY=your-secret-key-here
-DEBUG=True
+USE_SQLITE=False
 ```
 
-**For development with SQLite**, update `backend/settings.py`:
+Run migrations and start server:
 
-```python
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-```
-
-#### Run migrations
-
-```powershell
+```bash
 python manage.py makemigrations
 python manage.py migrate
-```
-
-#### Create a superuser (admin)
-
-```powershell
-python manage.py createsuperuser
-```
-
-Follow the prompts to create an admin account.
-
-### 3. Frontend Setup
-
-#### Install Node dependencies
-
-```powershell
-cd ../frontend
-npm install
-```
-
----
-
-## ▶️ Running the Application
-
-### Start Backend Server
-
-```powershell
-cd backend
 python manage.py runserver
 ```
 
-Backend will run at: `http://127.0.0.1:8000`
+### 3) Frontend
 
-- **API Base URL**: `http://127.0.0.1:8000/api/v1`
-- **Django Admin**: `http://127.0.0.1:8000/admin`
-- **Swagger Docs**: `http://127.0.0.1:8000/docs`
-
-### Start Frontend Dev Server
-
-```powershell
-cd frontend
+```bash
+cd ../frontend
+npm install
 npm run dev
 ```
 
-Frontend will run at: `http://localhost:5173` (or a different port if 5173 is in use)
+## API base URL
 
----
+`http://127.0.0.1:8000/api/v1`
 
-## 📡 API Endpoints
+## API endpoints
 
-### Authentication Endpoints
+### Auth
+- `POST /api/v1/auth/register/`
+- `POST /api/v1/auth/login/`
+- `POST /api/v1/auth/token/refresh/`
+- `GET /api/v1/auth/users/` (admin only)
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/v1/auth/register/` | Register a new user |
-| POST | `/api/v1/auth/login/` | Login and get JWT tokens |
-| GET | `/api/v1/auth/users/` | Get all users (admin only) |
+### Tasks
+- `GET /api/v1/tasks/`
+- `POST /api/v1/tasks/`
+- `GET /api/v1/tasks/{id}/`
+- `PUT /api/v1/tasks/{id}/`
+- `DELETE /api/v1/tasks/{id}/`
 
-### Task Endpoints
+## Standard error response
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/tasks/` | List tasks (all for admin, own for users) |
-| POST | `/api/v1/tasks/` | Create a new task |
-| GET | `/api/v1/tasks/{id}/` | Get task details |
-| PUT | `/api/v1/tasks/{id}/` | Update task (owner only) |
-| DELETE | `/api/v1/tasks/{id}/` | Delete task (owner only) |
+Validation and permission failures return:
 
----
-
-## 🔐 Authentication
-
-### Login Flow
-
-1. **Register** at `/register`
-   - Username, email, password
-   - User is created with `role='user'`
-
-2. **Login** at `/login`
-   - Send username and password
-   - Receive `access` and `refresh` JWT tokens
-   - JWT payload includes: `username`, `role`, `user_id`
-
-3. **Store Token**
-   - Frontend stores `access` token in localStorage
-   - Include in requests: `Authorization: Bearer <access_token>`
-
-### Token Structure
-
-Access token contains:
 ```json
 {
-  "token_type": "Bearer",
-  "exp": 1234567890,
-  "iat": 1234567800,
-  "jti": "abc123...",
-  "user_id": 1,
-  "username": "admin",
-  "role": "admin"
+  "success": false,
+  "status_code": 400,
+  "errors": {
+    "field_name": ["message"]
+  }
 }
 ```
 
----
+## Testing
 
-## 👥 Role-Based Access Control
-
-### Admin Role
-- ✅ View all tasks (across all users)
-- ✅ View all users
-- ✅ Create tasks
-- ✅ Edit/delete own tasks
-- ✅ Access admin panel
-
-### User Role
-- ✅ Create tasks
-- ✅ View only own tasks
-- ✅ Edit/delete own tasks
-- ❌ Cannot view other users' tasks
-- ❌ Cannot access admin panel
-
-### User Creation
-
-**Regular User** (via registration):
-- `role='user'` by default
-
-**Admin User**:
-- Create via `python manage.py createsuperuser`
-- Or update in Django admin: set `is_superuser=True` and `role='admin'`
-
----
-
-## 💡 Usage Examples
-
-### Register a New User
+Run backend tests:
 
 ```bash
-curl -X POST http://127.0.0.1:8000/api/v1/auth/register/ \
-  -H "Content-Type: application/json" \
-  -d '{
-    "username": "john_doe",
-    "email": "john@example.com",
-    "password": "securepassword123"
-  }'
+cd backend
+python manage.py test
 ```
 
-### Login
+## Scalability note (required deliverable)
 
-```bash
-curl -X POST http://127.0.0.1:8000/api/v1/auth/login/ \
-  -H "Content-Type: application/json" \
-  -d '{
-    "username": "john_doe",
-    "password": "securepassword123"
-  }'
-```
+This codebase is structured into independent modules (`users`, `tasks`, `core`) so each domain can evolve separately.
 
-Response:
-```json
-{
-  "refresh": "eyJ0eXAiOiJKV1QiLCJhbGc...",
-  "access": "eyJ0eXAiOiJKV1QiLCJhbGc...",
-  "username": "john_doe",
-  "role": "user"
-}
-```
+For production scale:
+- Keep API behind a load balancer and run multiple stateless Django instances.
+- Store JWT-secret and DB credentials in environment/secret manager.
+- Use PostgreSQL with read replicas for heavy read traffic.
+- Add Redis for caching frequent list endpoints and short-lived computed responses.
+- Add async workers (Celery/RQ) for non-blocking tasks (emails, reports, events).
+- Add centralized logging and metrics (ELK/Prometheus/Grafana) for observability.
 
-### Create a Task
+## Quick verification checklist
 
-```bash
-curl -X POST http://127.0.0.1:8000/api/v1/tasks/ \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Complete project",
-    "description": "Finish the REST API",
-    "is_completed": false
-  }'
-```
-
-### Get All Tasks (as Admin)
-
-```bash
-curl -X GET http://127.0.0.1:8000/api/v1/tasks/ \
-  -H "Authorization: Bearer <admin_access_token>"
-```
-
----
-
-## 📝 Database Models
-
-### User Model
-```python
-class User(AbstractUser):
-    role = CharField(choices=[('admin', 'Admin'), ('user', 'User')], default='user')
-```
-
-### Task Model
-```python
-class Task(models.Model):
-    title = CharField(max_length=200)
-    description = TextField()
-    owner = ForeignKey(User, on_delete=CASCADE)
-    is_completed = BooleanField(default=False)
-    created_at = DateTimeField(auto_now_add=True)
-    updated_at = DateTimeField(auto_now=True)
-```
+- `python manage.py check` passes
+- `python manage.py test` passes
+- `npm run build` passes
+- Swagger opens at `/docs/`
+- Register/login works
+- User can CRUD own tasks
+- Admin can list users and manage tasks

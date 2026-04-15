@@ -1,39 +1,68 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { BASE_URL, getToken } from "../api/api";
+import { authFetch, logout } from "../api/api";
 
 export default function EditTask() {
   const { id } = useParams();
   const [task, setTask] = useState({});
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch(`${BASE_URL}/tasks/${id}/`, {
-      headers: { Authorization: "Bearer " + getToken() },
-    })
-      .then((res) => res.json())
-      .then((data) => setTask(data));
+    const loadTask = async () => {
+      const res = await authFetch(`/tasks/${id}/`);
+      if (res.status === 401) {
+        logout();
+        return;
+      }
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError("Could not load task.");
+        return;
+      }
+      setTask(data);
+    };
+
+    loadTask();
   }, []);
 
   const updateTask = async (e) => {
     e.preventDefault();
 
-    await fetch(`${BASE_URL}/tasks/${id}/`, {
+    const res = await authFetch(`/tasks/${id}/`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + getToken(),
       },
       body: JSON.stringify(task),
     });
+
+    if (res.status === 401) {
+      logout();
+      return;
+    }
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      setError(data?.errors ? JSON.stringify(data.errors) : "Failed to update task.");
+      return;
+    }
 
     window.location.href = "/";
   };
 
   const deleteTask = async () => {
-    await fetch(`${BASE_URL}/tasks/${id}/`, {
+    const res = await authFetch(`/tasks/${id}/`, {
       method: "DELETE",
-      headers: { Authorization: "Bearer " + getToken() },
     });
+
+    if (res.status === 401) {
+      logout();
+      return;
+    }
+    if (!res.ok) {
+      setError("Failed to delete task.");
+      return;
+    }
 
     window.location.href = "/";
   };
@@ -41,6 +70,7 @@ export default function EditTask() {
   return (
     <div style={{ maxWidth: 400, margin: "80px auto" }}>
       <h2 style={{ textAlign: "center" }}>Edit Task</h2>
+      {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
 
       <form
         onSubmit={updateTask}
